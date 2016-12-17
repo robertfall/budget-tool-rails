@@ -1,0 +1,22 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @account.name %>
+</p>
+
+<h2>Transactions</h2>
+<table>
+  <thead>
+  </thead>
+  <tbody>
+    <% @account.transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.description %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Edit', edit_account_path(@account) %> |
+<%= link_to 'Back', accounts_path %>
