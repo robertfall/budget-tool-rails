@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
-<%= @account.name %>
-</p>
-
-<h2>Transactions</h2>
+<h3><%= @account.name %></h3>
+<%= link_to 'Add Transaction', new_account_transaction_path(@account), { class: 'pure-button pure-button-primary' } %>
+<br / >
+<br / >
 <table class="pure-table pure-table-horizontal pure-table-striped">
   <thead>
   </thead>
@@ -10,12 +10,11 @@
     <% @account.transaction_summaries.each do |transaction| %>
       <tr>
         <td><%= transaction.processed_on %></td>
-        <td><%= transaction.description %></td>
+        <td><%= link_to transaction.description, edit_account_transaction_path(@account, transaction) %></td>
         <td><%= number_to_currency(transaction.amount) %></td>
         <td><%= number_to_currency(transaction.balance) %></td>
+        <td><%= number_to_currency(transaction.available) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<br / >
-<%= link_to 'Add Transaction', new_account_transaction_path(@account), { class: 'pure-button pure-button-primary' } %>

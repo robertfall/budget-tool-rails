@@ -20,7 +20,7 @@ class TransactionsController < ApplicationController
   # POST /transactions.json
   def create
     @transaction = @account.transactions.build(transaction_params)
-    @transaction.amount = -@transaction.amount if @transaction.expense == true
+    invert_sign(@transaction)
     
     respond_to do |format|
       if @transaction.save
@@ -36,7 +36,6 @@ class TransactionsController < ApplicationController
   # PATCH/PUT /transactions/1
   # PATCH/PUT /transactions/1.json
   def update
-    correct_sign(@transaction)
     respond_to do |format|
       if @transaction.update(transaction_params)
         format.html { redirect_to @account, notice: 'Transaction was successfully updated.' }
@@ -66,6 +65,10 @@ class TransactionsController < ApplicationController
 
     def set_account
       @account = Account.find(params[:account_id])
+    end
+
+    def invert_sign(transaction)
+      transaction.amount = -transaction.amount if transaction.expense == true
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
