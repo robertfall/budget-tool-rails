@@ -3,18 +3,30 @@
 <%= link_to 'Add Transaction', new_account_transaction_path(@account), { class: 'pure-button pure-button-primary' } %>
 <br / >
 <br / >
-<table class="pure-table pure-table-horizontal pure-table-striped">
-  <thead>
-  </thead>
-  <tbody>
+<div class="legend pure-g">
+  <div class="pure-u-1 pure-u-sm-2-5"></div>
+  <div class="pure-u-8-24 pure-u-sm-1-5"><span class='amount-header'>Amount</span></div>
+  <div class="pure-u-8-24 pure-u-sm-1-5"><span class='amount-header'>Balance</span></div>
+  <div class="pure-u-8-24 pure-u-sm-1-5"><span class='amount-header'>Available</span></div>
+</div>
+<ul>
     <% @account.transaction_summaries.each do |transaction| %>
-      <tr>
-        <td><%= transaction.processed_on %></td>
-        <td><%= link_to transaction.description, edit_account_transaction_path(@account, transaction) %></td>
-        <td><%= number_to_currency(transaction.amount) %></td>
-        <td><%= number_to_currency(transaction.balance) %></td>
-        <td><%= number_to_currency(transaction.available) %></td>
-      </tr>
+      <li class='transaction pure-g'>
+        <div class='header pure-u-1 pure-u-sm-2-5'>
+          <%= link_to edit_account_transaction_path(@account, transaction) do %>
+          <%= transaction.processed_on %> - <%= transaction.description %>
+          <% end %>
+        </div>
+        <div class="pure-u-8-24 pure-u-sm-1-5">
+          <span class="amount"><%= number_to_currency(transaction.amount) %></span>
+        </div>
+        <div class="pure-u-8-24 pure-u-sm-1-5">
+          <span class="amount"><%= number_to_currency(transaction.balance) %></span>
+        </div>
+        <div class="pure-u-8-24 pure-u-sm-1-5">
+          <span class="amount"><%= number_to_currency(transaction.available) %></span>
+        </div>
+      </li>
     <% end %>
-  </tbody>
+</ul>
 </table>
