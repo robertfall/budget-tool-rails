@@ -1,11 +1,6 @@
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
-
-  # GET /transactions
-  # GET /transactions.json
-  def index
-    @transactions = Transaction.all
-  end
+  before_action :set_account
 
   # GET /transactions/1
   # GET /transactions/1.json
@@ -14,7 +9,7 @@ class TransactionsController < ApplicationController
 
   # GET /transactions/new
   def new
-    @transaction = Transaction.new
+    @transaction = @account.transactions.new(processed_on: Date.today, expense: true)
   end
 
   # GET /transactions/1/edit
@@ -24,11 +19,12 @@ class TransactionsController < ApplicationController
   # POST /transactions
   # POST /transactions.json
   def create
-    @transaction = Transaction.new(transaction_params)
-
+    @transaction = @account.transactions.build(transaction_params)
+    @transaction.amount = -@transaction.amount if @transaction.expense == true
+    
     respond_to do |format|
       if @transaction.save
-        format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
+        format.html { redirect_to @account, notice: 'Transaction was successfully created.' }
         format.json { render :show, status: :created, location: @transaction }
       else
         format.html { render :new }
@@ -40,9 +36,10 @@ class TransactionsController < ApplicationController
   # PATCH/PUT /transactions/1
   # PATCH/PUT /transactions/1.json
   def update
+    correct_sign(@transaction)
     respond_to do |format|
       if @transaction.update(transaction_params)
-        format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
+        format.html { redirect_to @account, notice: 'Transaction was successfully updated.' }
         format.json { render :show, status: :ok, location: @transaction }
       else
         format.html { render :edit }
@@ -56,7 +53,7 @@ class TransactionsController < ApplicationController
   def destroy
     @transaction.destroy
     respond_to do |format|
-      format.html { redirect_to transactions_url, notice: 'Transaction was successfully destroyed.' }
+      format.html { redirect_to @account, notice: 'Transaction was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -67,8 +64,12 @@ class TransactionsController < ApplicationController
       @transaction = Transaction.find(params[:id])
     end
 
+    def set_account
+      @account = Account.find(params[:account_id])
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params
-      params.require(:transaction).permit(:description, :processed_at, :account_id)
+      params.require(:transaction).permit(:description, :amount, :processed_on, :expense, :account_id)
     end
 end

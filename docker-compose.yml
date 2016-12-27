@@ -1,0 +1,28 @@
+version: "2"
+
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+     - ./:/app
+    links:
+      - postgres
+  
+  schema:
+    image: dhoer/flyway:4.0.3-alpine
+    volumes:
+      - ./db/migrations:/flyway/sql/public
+      - ./db/flyway.conf:/flyway/conf/flyway.conf
+    links:
+      - postgres
+
+  postgres:
+    image: postgres:9.6.1-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.db:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: development

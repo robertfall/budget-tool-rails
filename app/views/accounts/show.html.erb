@@ -1,22 +1,21 @@
 <p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @account.name %>
+<%= @account.name %>
 </p>
 
 <h2>Transactions</h2>
-<table>
+<table class="pure-table pure-table-horizontal pure-table-striped">
   <thead>
   </thead>
   <tbody>
-    <% @account.transactions.each do |transaction| %>
+    <% @account.transaction_summaries.each do |transaction| %>
       <tr>
-        <td><%= transaction.description %>
+        <td><%= transaction.processed_on %></td>
+        <td><%= transaction.description %></td>
+        <td><%= number_to_currency(transaction.amount) %></td>
+        <td><%= number_to_currency(transaction.balance) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<%= link_to 'Edit', edit_account_path(@account) %> |
-<%= link_to 'Back', accounts_path %>
+<br / >
+<%= link_to 'Add Transaction', new_account_transaction_path(@account), { class: 'pure-button pure-button-primary' } %>
