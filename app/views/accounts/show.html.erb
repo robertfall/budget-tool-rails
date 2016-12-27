@@ -1,4 +1,3 @@
-<p id="notice"><%= notice %></p>
 <h3><%= @account.name %></h3>
 <%= link_to 'Add Transaction', new_account_transaction_path(@account), { class: 'pure-button pure-button-primary' } %>
 <br / >
@@ -10,7 +9,7 @@
   <div class="pure-u-8-24 pure-u-sm-1-5"><span class='amount-header'>Available</span></div>
 </div>
 <ul>
-    <% @account.transaction_summaries.each do |transaction| %>
+    <% @transactions.each do |transaction| %>
       <li class='transaction pure-g'>
         <div class='header pure-u-1 pure-u-sm-2-5'>
           <%= link_to edit_account_transaction_path(@account, transaction) do %>

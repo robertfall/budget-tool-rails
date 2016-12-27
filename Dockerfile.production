@@ -1,0 +1,22 @@
+FROM ruby:2.3.3-alpine
+
+ADD Gemfile* /app/
+
+RUN apk --update add nodejs postgresql-dev
+
+RUN apk --update add --virtual build-dependencies build-base ruby-dev openssl-dev \
+    libc-dev linux-headers && \
+    gem install bundler && \
+    cd /app ; bundle install && \
+    apk del build-dependencies
+
+ADD . /app/
+
+CMD rake assets:precompile
+
+WORKDIR /app
+EXPOSE 3000
+ENV RAILS_ENV=production
+ENV SECRET_KEY_BASE=0536ddec713fef8be5db929a9f8dcea92eb7af32c4653bbb8ddabb946f1b50c8a123ff22063b636f992b1e465a66c659fe0ef51b43515d8bc3ef456572f04154
+ENV DB_PASSWORD=anotherlongpassword
+CMD rails server

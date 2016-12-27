@@ -10,6 +10,7 @@ class AccountsController < ApplicationController
   # GET /accounts/1
   # GET /accounts/1.json
   def show
+    @transactions = @account.transaction_summaries.order(:processed_on)
   end
 
   # GET /accounts/new

@@ -1,12 +1,12 @@
 <div class="session">
-  <% if signed_in? %>
-    <%= button_to 'Sign out', sign_out_path, method: :delete, class: 'pure-button pure-button-cancel' %>
-  <% end %>
+  <%= link_to 'Home', root_path, class: 'pure-button' %>
+  <%= link_to 'Sign out', sign_out_path, class: 'pure-button pure-button-cancel' %>
 </div>
 
-
-<div id="flash">
-  <% flash.each do |key, value| %>
-    <div class="flash <%= key %>"><%= value %></div>
-  <% end %>
-</div>
+<% if flash.present? %>
+  <div id="flash">
+    <% flash.each do |key, value| %>
+      <div class="flash <%= key %>"><%= value %></div>
+    <% end %>
+  </div>
+<% end %>
