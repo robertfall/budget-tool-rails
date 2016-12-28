@@ -1,0 +1,2 @@
+class CategoryAllocationsController < ApplicationController
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161227142019) do
+ActiveRecord::Schema.define(version: 20161228072616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,34 @@ ActiveRecord::Schema.define(version: 20161227142019) do
     t.string   "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "category_allocations", force: :cascade do |t|
+    t.integer  "account_id",  null: false
+    t.integer  "category_id", null: false
+    t.decimal  "amount",      null: false
+    t.date     "month",       null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["account_id", "category_id", "month"], name: "category_allocations_uniq", unique: true, using: :btree
+    t.index ["account_id"], name: "index_category_allocations_on_account_id", using: :btree
+    t.index ["category_id"], name: "index_category_allocations_on_category_id", using: :btree
+  end
+
+  create_table "transaction_categories", force: :cascade do |t|
+    t.integer  "transaction_id",         null: false
+    t.integer  "category_allocation_id", null: false
+    t.decimal  "amount"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["category_allocation_id"], name: "index_transaction_categories_on_category_allocation_id", using: :btree
+    t.index ["transaction_id"], name: "index_transaction_categories_on_transaction_id", using: :btree
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -50,6 +78,10 @@ ActiveRecord::Schema.define(version: 20161227142019) do
     t.index ["remember_token"], name: "index_users_on_remember_token", using: :btree
   end
 
+  add_foreign_key "category_allocations", "accounts"
+  add_foreign_key "category_allocations", "categories"
+  add_foreign_key "transaction_categories", "category_allocations"
+  add_foreign_key "transaction_categories", "transactions"
   add_foreign_key "transactions", "accounts"
 
   create_view :transaction_summaries,  sql_definition: <<-SQL
