@@ -68,7 +68,7 @@ class TransactionsController < ApplicationController
     end
 
     def invert_sign(transaction)
-      transaction.amount = -transaction.amount if transaction.expense == true
+      transaction.amount = -transaction.amount.abs if transaction.expense == true
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
